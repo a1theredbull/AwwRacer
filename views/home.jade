@@ -1,0 +1,72 @@
+doctype html
+html(lang="en")
+   head
+      title="AWW RACER"
+      style.
+         .kitten-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            overflow: hidden;
+            margin-top: 5px;
+         }
+
+         .kitten-container:hover {
+         	border: 5px solid gray;
+         }
+
+         .kitten-container img {
+            width: 100px;
+            height: 100px;
+         }
+      script(type='text/javascript', src='https://code.jquery.com/jquery-2.1.1.min.js')
+      script(type='text/javascript').
+         var race_id;
+         var kitten_racers;
+
+         function restartRace() {
+         	clearInterval(race_id);
+         	$(kitten_racers).css({
+         	   'margin-left': 0,
+         	   'border': 0
+         	});
+         }
+
+         function startRace() {
+            kitten_racers = $('.kitten-container');
+            var finish_line = $(window).width() - 200;
+            race_id = setInterval(function() {
+             	$.each(kitten_racers, function(index, racer) {
+             		var kitten_distance_ran = parseInt($(this).css('margin-left'));
+             		if(kitten_distance_ran > finish_line) {
+             		   console.log('race finished')
+             		   return finishRace(racer);
+             		}
+                    var distance_to_run = (Math.random() * 100);
+
+                    if(kitten_distance_ran - distance_to_run < finish_line) {
+             	       $(this).animate({
+             			   'margin-left': "+=" + distance_to_run
+             		   }, 400);
+                    }
+             	});
+             }, 400);
+             console.log(race_id);
+         }
+
+         function finishRace(racer) {
+            $(racer).css({
+               'border': '5px solid yellow'
+            });
+         	clearInterval(race_id);
+         	$(kitten_racers).stop(true, false);
+         	return false;
+         }
+   body
+      h1 AWW RACER
+      button(type='button', onclick='restartRace()') RESTART RACE
+      button(type='button', onclick='startRace()') START RACE
+      ul
+         each kitten_pic, index in kittens
+            li.kitten-container(id=index)
+               img(src="#{kitten_pic}")
